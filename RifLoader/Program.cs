@@ -1,5 +1,4 @@
-﻿using RifLoader.HuffmanDLL;
-using System.Text;
+﻿using System.Text;
 
 namespace RifLoader
 {
@@ -7,9 +6,6 @@ namespace RifLoader
     {
         static void Main(string[] args)
         {
-            int apiVersion = HufmanDllAPI.huffman_get_version();
-            Console.WriteLine(apiVersion);
-
             string rifLocation = @"C:\\Games\\GOG\\AvP Classic\\avp_rifs";
             string testRif = "derelict.rif";
 

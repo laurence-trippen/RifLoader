@@ -1,4 +1,5 @@
 ﻿using CH.Compressor.Huffman;
+using RifLoader.HuffmanDLL;
 using System.Text;
 
 namespace RifLoader
@@ -10,6 +11,7 @@ namespace RifLoader
 
         private byte[]? data = null;
         private bool isCompressed = false;
+        private string rifId;
 
         public FileChunk(string rifPath)
         {
@@ -18,11 +20,11 @@ namespace RifLoader
 
             this.data = File.ReadAllBytes(rifPath);
 
-            string rifId = Encoding.ASCII.GetString(GetByteSpan(0, 8));
+            this.rifId = Encoding.ASCII.GetString(GetByteSpan(0, 8));
 
-            Console.WriteLine("RIF ID: " + rifId);
+            Console.WriteLine("RIF ID: " + this.rifId);
 
-            this.isCompressed = rifId == COMPRESSED_RIF_IDENTIFIER;
+            this.isCompressed = this.rifId == COMPRESSED_RIF_IDENTIFIER;
 
             Console.WriteLine("RIF COMPRESSED: " + this.isCompressed);
 
@@ -50,7 +52,17 @@ namespace RifLoader
             Console.WriteLine("Compressed data size: " + compressedDataSize);
             Console.WriteLine("Un Compressed data size: " + uncompressedDataSize);
 
-            Huffman.Huffman.MakeHuffmanDecodeTable(codelengthCount, 11, byteAssignment);
+
+            HuffmanPackage huffmanPackage = new HuffmanPackage();
+            huffmanPackage.Identifier = this.rifId;
+            huffmanPackage.CompressedDataSize = compressedDataSize;
+            huffmanPackage.UncompressedDataSize = uncompressedDataSize;
+            huffmanPackage.CodelengthCount = Array.ConvertAll(codelengthCount, (x) => (int)x); // byte[] -> int[]
+            huffmanPackage.ByteAssignment = byteAssignment;
+
+            IntPtr result = HuffmanDllAPI.HuffmanDecompress(ref huffmanPackage);
+
+            // Huffman.Huffman.MakeHuffmanDecodeTable(codelengthCount, 11, byteAssignment);
         }
 
         private byte[] GetByteSpan(int offset, int length)
