@@ -4,9 +4,10 @@
 #include <stdlib.h>
 
 int main(void) {
+  printf("test\n");
+  
   int version = huffman_get_version();
 
-  printf("test\n");
   printf("%d\n", version);
 
   return EXIT_SUCCESS;
