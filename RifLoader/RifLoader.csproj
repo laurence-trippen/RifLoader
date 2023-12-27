@@ -15,4 +15,8 @@
     <PackageReference Include="CH.Compressor.Huffman" Version="1.2.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HuffmanDLL\HuffmanDLL.vcxproj" />
+  </ItemGroup>
+
 </Project>
